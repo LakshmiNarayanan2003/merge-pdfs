@@ -1,0 +1,26 @@
+# PDF feature support
+
+Evidence comes from original generated fixtures and direct output parsing. Arbitrary third-party PDFs can differ; inspect important results and retain originals.
+
+| Feature                              | Status                    | Behavior / evidence                                                                                                                                                         |
+| ------------------------------------ | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Text                                 | Supported                 | Copied PDF text operators/resources; PDF.js extracts exact A-3/A-1 labels from reordered output. No OCR.                                                                    |
+| Vector content                       | Supported                 | Page content streams/resources are copied; original vector fixtures and rendered output tested. No intentional rasterization.                                               |
+| Raster images                        | Supported                 | Existing image resources copied; raster fixture parses with original boxes. No intentional image recompression.                                                             |
+| Page sizes                           | Supported                 | Exact dimensions verified for mixed portrait/landscape/square fixtures.                                                                                                     |
+| MediaBox/CropBox                     | Supported                 | Nonzero/negative media origin and crop box compared programmatically.                                                                                                       |
+| Rotation                             | Supported                 | Inherited/source rotation plus normalized 90° user edits; output angles verified.                                                                                           |
+| Annotations                          | Not preserved             | All page Annots removed deliberately; active link fixture verifies absence. Comments/highlights may disappear.                                                              |
+| Links                                | Not preserved             | Annotation-based links removed; text still visible where drawn as page content.                                                                                             |
+| Forms / XFA                          | Not supported             | Widgets/AcroForm not imported. Values appearing only in widgets may disappear; flatten a copy first. Form presence warning where PDF.js reports it. XFA rendering disabled. |
+| Bookmarks/outlines                   | Not preserved             | New document catalog does not import source outlines. No destination remapping.                                                                                             |
+| Embedded files                       | Not preserved             | New catalog omits Names/EmbeddedFiles; attachment fixture verifies omission.                                                                                                |
+| JavaScript/actions                   | Not executed in app       | No PDF.js scripting/annotation viewer instantiated. Source catalog OpenAction and page AA/A/Annots are omitted in fixtures. Not a complete sanitization claim.              |
+| Encryption                           | Not supported             | Password-required and encrypted pdf-lib inputs rejected. No insecure ignoreEncryption or raster fallback. Public deterministic encrypted fixture verifies rejection.        |
+| Digital signatures                   | Not preserved             | Merging/modifying signed PDFs invalidates signatures. No signature detection/verification claim.                                                                            |
+| Source metadata                      | Not preserved             | Fresh PDFMerge Creator/Producer and sanitized output title; no copied author/paths.                                                                                         |
+| Accessibility tags / reading order   | Not guaranteed            | No structure-tree remapping or PDF/UA conformance validation.                                                                                                               |
+| PDF/A, color profiles, unusual fonts | Browser/library dependent | No archival or universal visual-fidelity guarantee. Embedded resources copied but complex interpretation can vary.                                                          |
+| Byte-identical structure             | Not preserved             | pdf-lib rewrites objects and cross-reference structures.                                                                                                                    |
+
+The app does not flatten forms, preserve bookmark destinations, decrypt encrypted sources, sign PDFs, compress PDFs, rasterize source pages, or provide a server fallback. A readable output/page count check is not comprehensive feature validation.

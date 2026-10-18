@@ -1,0 +1,14 @@
+# Engineering decisions
+
+1. **Local-only static site.** The browser File API and in-memory workers keep private content away from any conversion service. No backend, analytics, persistence or service worker. Offline caches introduce unnecessary ambiguity and fully offline operation is not promised.
+2. **PDF.js for interpretation.** Maintained Mozilla parser/rendering engine, bundled worker/CMaps/standard fonts/WASM. Only display/canvas APIs are used; no scripting manager or PDF-supplied URLs. The installed 6.x types/source are the integration authority; obsolete isEvalSupported is not passed.
+3. **pdf-lib for output.** Its copyPages API keeps PDF text/vectors/images as content rather than rasterizing. Original dimensions, rotation, content and label order are tested. Direct page copying does not imply advanced-document preservation.
+4. **Explicit interactive feature policy.** Remove page annotations/actions/widgets and create a fresh catalog; warn about forms and signatures. Bookmark/form/annotation preservation requires feature-specific remapping not provided by simple copyPages. Do not advertise it.
+5. **No encrypted merging in 0.1.0.** PDF.js unlock support does not imply pdf-lib decryption. ignoreEncryption is not decryption. A raster workaround would violate content preservation; external decryption would violate privacy. Reject and explain.
+6. **Stable IDs and one authoritative page array.** Display position never identifies source pages. Document grouping and page interleaving are explicit operations; export consumes the same page model.
+7. **Range order.** Unlike PDF2Pix's sorted extraction ranges, merge ranges preserve entered order and deduplicate first occurrences. Empty means all pages. Applying a range explicitly regroups that source.
+8. **Memory/responsiveness.** Worker-based copying and serialization, lazy 220-pixel thumbnails, two render slots, bounded Blob cache and 12-card pagination. Caps are safeguards, not universal guarantees.
+9. **Sibling visual identity.** Owner-authorized PDF2Pix design tokens/configuration patterns adapted after reading application, components, hook, libraries, tests, scripts, lockfile and workflows/docs. No PDF-to-image conversion logic copied into output.
+10. **Static deployment.** Actual repo base `/merge-pdfs/`, optional VITE_BASE_PATH, CI-verified artifact deployed by separate least-privilege Pages job. No claim of a live release without remote evidence.
+
+Primary implementation sources: [pdf-lib copyPages](https://pdf-lib.js.org/docs/api/classes/pdfdocument#copypages), [PDF.js display API](https://github.com/mozilla/pdf.js/blob/master/src/display/api.js), [Vite assets](https://vite.dev/guide/assets.html), [GitHub Pages workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages). Installed dependency source/API types and actual generated-output tests informed feature decisions.
