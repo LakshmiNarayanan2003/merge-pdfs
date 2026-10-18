@@ -45,10 +45,17 @@ The first cross-browser run on October 18 passed all 21 Chromium cases but had 4
 
 ## Blocked / not verified
 
-- **Pinned Chromium download:** the official Chrome-for-Testing download redirects to `storage.googleapis.com`, which still returns HTTP 403 from the egress proxy. Chromium results use the installed system browser, not the pinned downloaded build. Required browser, GitHub API and Pages hosts have been saved in the cloud configuration draft; saving a draft does not apply the running network policy. Never disable TLS or artifact verification.
-- **Remote release:** CI/Pages workflows are created but no remote green run or live PDFMerge publication is claimed. The GitHub API connectivity probe was blocked by the egress policy; native authenticated Git reads worked. Pages repository administration and live-host verification have not been established by this local build. Native Git is used separately to publish the reviewed source.
+- **Local Chromium variant:** local results use system Chromium 154, not the pinned downloaded build. Its initial download was blocked by the proxy; GitHub Actions subsequently installed its pinned browsers and passed the complete suite.
 - **Real assistive technology / devices:** no manual screen-reader assessment or physical iOS/Android OS download interaction was performed. Desktop engine viewport emulation is not a physical-device guarantee.
 - **PDF scope:** no encrypted merging, annotation/form/link/bookmark/signature preservation, PDF/UA/PDF-A certification, comprehensive sanitization or universal complex-PDF fidelity guarantee. Exact behavior is in [PDF_SUPPORT.md](PDF_SUPPORT.md).
+
+## Published verification
+
+The application commit [`daa3ed7`](https://github.com/LakshmiNarayanan2003/merge-pdfs/commit/daa3ed7d0b48d5531e66ee64a6a472fb471ab1b4) was pushed to `master` on October 18. Both [CI](https://github.com/LakshmiNarayanan2003/merge-pdfs/actions/runs/39113257786) and [Pages deployment](https://github.com/LakshmiNarayanan2003/merge-pdfs/actions/runs/39113258099) completed successfully. The deployment's reusable verification job passed dependency installation, fixtures, deterministic checks, audit, pinned browser installation, all browser tests, coverage, screenshots and the alternate-base smoke check before deployment.
+
+The public [PDFMerge site](https://lakshminarayanan2003.github.io/merge-pdfs/) passed an additional real Firefox browser smoke test: three bundled samples loaded, merged output downloaded, all eight page labels parsed in exact A1/A2/A3/B1/B2/C1/C2/C3 order, filename `merged.pdf`, zero page errors and only same-origin requests. This live-host smoke is additional to the 63 local browser cases.
+
+The environment's HTTPS proxy CA was trusted only inside a temporary Firefox test profile. Certificate validation remained enabled, and no persistent browser trust store was changed. GitHub API and live-site connectivity were available by this final check. This documentation update records the already verified application commit; it does not change application code.
 
 ## Reproduce
 
