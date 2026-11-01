@@ -29,7 +29,7 @@
     "check:full": "npm run fixtures && npm run check && npm run test:coverage && npm run test:e2e && npm run screenshots && npm audit --audit-level=moderate"
   },
   "dependencies": {
-    "lucide-react": "^1.53.0",
+    "lucide-react": "^1.63.0",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^6.4.299",
     "react": "^19.3.0",
